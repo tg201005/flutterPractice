@@ -1,176 +1,81 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:toonflix/screens/home_screen.dart';
 
 void main() {
-  runApp(
-    MyApp(),
-  );
+  runApp(App());
 }
 
-// class numThreads extends StatefulWidget {
-//   final int num;
-
-//   numThreads({
-//     super.key,
-//     required this.num,
-//   });
-
-//   @override
-//   State<numThreads> createState() => _numThreadsState();
-// }
-
-// class _numThreadsState extends State<numThreads> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       height: 200,
-//       margin: const EdgeInsets.symmetric(vertical: 20),
-//       child: ListView(
-//         scrollDirection: Axis.horizontal,
-//         children: <Widget>[
-//           // for (int i = widget.num; i > 0; i--)
-//           //   Transform.translate(
-//           //     offset: Offset(0, 0),
-//           //     child: Container(
-//           //       margin: EdgeInsets.all(5),
-//           //       padding: EdgeInsets.all(10),
-//           //       decoration: BoxDecoration(
-//           //         color: Colors.black,
-//           //         borderRadius: BorderRadius.circular(10),
-//           //         boxShadow: [
-//           //           BoxShadow(
-//           //             color: Colors.amber,
-//           //             blurRadius: 10,
-//           //             offset: Offset(5, 5),
-//           //           ),
-//           //         ],
-//           //       ),
-//           //       child: Text(
-//           //         '$i',
-//           //         style: TextStyle(
-//           //           fontSize: 32,
-//           //           fontWeight: FontWeight.w600,
-//           //           color: Colors.amber,
-//           //         ),
-//           //       ),
-//           //     ),
-//           //   ),
-//         ],
-//       ),
-//     );
-
-//     //fix above code including for loop
-//   }
-// }
-
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => MyAppState();
-}
-
-class MyAppState extends State<MyApp> {
-  int num = 0;
-
-  void addCount() {
-    setState(() {
-      num++;
-    });
-  }
-
+class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'number',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.amber,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    IconButton(
-                      onPressed: addCount,
-                      icon: Icon(
-                        Icons.add_box_rounded,
-                        color: Colors.amber,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black,
-                            blurRadius: 10,
-                            offset: Offset(5, 5),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Text(
-                      '$num',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.amber,
-                      ),
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      height: 200,
-                      margin: const EdgeInsets.symmetric(vertical: 20),
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          Container(
-                            width: 160,
-                            color: Colors.red,
-                          ),
-                          Container(
-                            width: 160,
-                            color: Colors.blue,
-                          ),
-                          Container(
-                            width: 160,
-                            color: Colors.green,
-                          ),
-                          Container(
-                            width: 160,
-                            color: Colors.yellow,
-                          ),
-                          Container(
-                            width: 160,
-                            color: Colors.orange,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                  // numThreads(
-                  //   num: num,
-                  // ),
-                ),
-              ],
-            )),
+      theme: ThemeData(
+        backgroundColor: const Color(0xFFE7626C),
+        textTheme: const TextTheme(
+          headline1: TextStyle(
+            color: Color(0xFF232B55),
+          ),
+        ),
+        cardColor: const Color(0xFFF4EDDB),
       ),
+      home: const HomeScreen(),
     );
   }
 }
+
+// import 'package:flutter/material.dart';
+
+// void main() {
+//   runApp(App());
+// }
+
+// class App extends StatefulWidget {
+//   @override
+//   State<App> createState() => _AppState();
+// }
+
+// class _AppState extends State<App> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       theme: ThemeData(
+//         textTheme: const TextTheme(
+//           titleLarge: TextStyle(
+//             color: Colors.red,
+//           ),
+//         ),
+//       ),
+//       home: Scaffold(
+//         backgroundColor: const Color(0xFFF4EDDB),
+//         body: Center(
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: const [
+//               MyLargeTitle(),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// class MyLargeTitle extends StatelessWidget {
+//   const MyLargeTitle({
+//     Key? key,
+//   }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Text(
+//       'My Large Title',
+//       style: TextStyle(
+//         fontSize: 30,
+//         color: Theme.of(context).textTheme.titleLarge?.color,
+//       ),
+//     );
+//   }
+// }
 
 // // import 'dart:html';
 
