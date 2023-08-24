@@ -1,148 +1,147 @@
-import 'dart:async';
+// Copyright 2019 the Dart project authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license
+// that can be found in the LICENSE file.
 
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+const Color primaryColor = Colors.orange;
+const TargetPlatform platform = TargetPlatform.android;
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
+void main() {
+  runApp(Sunflower());
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  static const twentyFiveMinutes = 1500;
-  int totalSeconds = twentyFiveMinutes;
-  bool isRunning = false;
-  int totalPomodoros = 0;
-  late Timer timer;
+class SunflowerPainter extends CustomPainter {
+  static const seedRadius = 2.0;
+  static const scaleFactor = 4;
+  static const tau = math.pi * 2;
 
-  void onTick(Timer timer) {
-    if (totalSeconds == 0) {
-      setState(() {
-        totalPomodoros = totalPomodoros + 1;
-        isRunning = false;
-        totalSeconds = twentyFiveMinutes;
-      });
-      timer.cancel();
-    } else {
-      setState(() {
-        totalSeconds = totalSeconds - 1;
-      });
+  static final phi = (math.sqrt(5) + 1) / 2;
+
+  final int seeds;
+
+  SunflowerPainter(this.seeds);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = size.width / 2;
+
+    for (var i = 0; i < seeds; i++) {
+      final theta = i * tau / phi;
+      final r = math.sqrt(i) * scaleFactor;
+      final x = center + r * math.cos(theta);
+      final y = center - r * math.sin(theta);
+      final offset = Offset(x, y);
+      if (!size.contains(offset)) {
+        continue;
+      }
+      drawSeed(canvas, x, y);
     }
   }
 
-  void onStartPressed() {
-    timer = Timer.periodic(
-      const Duration(seconds: 1),
-      onTick,
-    );
-    setState(() {
-      isRunning = true;
-    });
+  @override
+  bool shouldRepaint(SunflowerPainter oldDelegate) {
+    return oldDelegate.seeds != seeds;
   }
 
-  void onPausePressed() {
-    timer.cancel();
-    setState(() {
-      isRunning = false;
-    });
+  // Draw a small circle representing a seed centered at (x,y).
+  void drawSeed(Canvas canvas, double x, double y) {
+    final paint = Paint()
+      ..strokeWidth = 2
+      ..style = PaintingStyle.fill
+      ..color = primaryColor;
+    canvas.drawCircle(Offset(x, y), seedRadius, paint);
   }
+}
 
-  void onResetPressed() {
-    timer.cancel();
-    setState(() {
-      totalSeconds = twentyFiveMinutes;
-      isRunning = false;
-    });
+class Sunflower extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _SunflowerState();
   }
+}
 
-  String format(int seconds) {
-    var duration = Duration(seconds: seconds);
-    print(duration);
-    return duration.toString().split(".").first.substring(2, 7);
-  }
+class _SunflowerState extends State<Sunflower> {
+  double seeds = 100.0;
+
+  int get seedCount => seeds.floor();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: Column(
-        children: [
-          Flexible(
-            flex: 1,
-            child: Container(
-              alignment: Alignment.bottomCenter,
-              child: Text(
-                format(totalSeconds),
-                style: TextStyle(
-                  color: Theme.of(context).cardColor,
-                  fontSize: 89,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
-          Flexible(
-            flex: 3,
-            child: Center(
-              child: IconButton(
-                iconSize: 120,
-                color: Theme.of(context).cardColor,
-                onPressed: isRunning ? onPausePressed : onStartPressed,
-                icon: Icon(isRunning
-                    ? Icons.pause_circle_outline
-                    : Icons.play_circle_outline),
-              ),
-            ),
-          ),
-          Flexible(
-            flex: 1,
-            child: Center(
-              child: IconButton(
-                iconSize: 120,
-                color: Theme.of(context).cardColor,
-                onPressed: onResetPressed,
-                icon: Icon(Icons.replay),
-              ),
-            ),
-          ),
-          Flexible(
-            flex: 1,
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).cardColor,
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Pomodoros',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Theme.of(context).textTheme.headline1!.color,
-                          ),
-                        ),
-                        Text(
-                          '$totalPomodoros',
-                          style: TextStyle(
-                            fontSize: 58,
-                            fontWeight: FontWeight.w600,
-                            color: Theme.of(context).textTheme.headline1!.color,
-                          ),
-                        ),
-                      ],
-                    ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData().copyWith(
+        useMaterial3: true,
+        platform: platform,
+        brightness: Brightness.dark,
+        sliderTheme: SliderThemeData.fromPrimaryColors(
+          primaryColor: primaryColor,
+          primaryColorLight: primaryColor,
+          primaryColorDark: primaryColor,
+          valueIndicatorTextStyle: const DefaultTextStyle.fallback().style,
+        ),
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text("Sunflower"),
+        ),
+        drawer: Drawer(
+          child: ListView(
+            children: const [
+              DrawerHeader(
+                child: Center(
+                  child: Text(
+                    "Sunflower 🌻",
+                    style: TextStyle(fontSize: 32),
                   ),
                 ),
-              ],
+              ),
+            ],
+          ),
+        ),
+        body: Container(
+          constraints: const BoxConstraints.expand(),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.transparent,
             ),
-          )
-        ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.transparent,
+                  ),
+                ),
+                child: SizedBox(
+                  width: 400,
+                  height: 400,
+                  child: CustomPaint(
+                    painter: SunflowerPainter(seedCount),
+                  ),
+                ),
+              ),
+              Text("Showing $seedCount seeds"),
+              ConstrainedBox(
+                constraints: const BoxConstraints.tightFor(width: 300),
+                child: Slider.adaptive(
+                  min: 20,
+                  max: 2000,
+                  value: seeds,
+                  onChanged: (newValue) {
+                    setState(() {
+                      seeds = newValue;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
